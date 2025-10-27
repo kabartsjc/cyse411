@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Canonicalization Demo</title>
+</head>
+<body>
+  <h1>Canonicalization Demo</h1>
+  <p>Use the form below to request a file. Client-side validation prevents suspicious inputs, but server-side checks are the true defense.</p>
+
+  <form id="readForm">
+    <label for="filename">Filename (relative to server files/):</label><br/>
+    <input id="filename" name="filename" type="text" required
+      pattern="^[a-zA-Z0-9_\-./]+$"
+      title="Use only letters, numbers, hyphen, underscore, dot and slash" />
+    <button type="submit">Read (secure)</button>
+  </form>
+
+  <form id="readVulnForm" style="margin-top:1rem">
+    <label for="filenameV">Filename (vulnerable endpoint):</label><br/>
+    <input id="filenameV" name="filename" type="text" />
+    <button type="submit">Read (vulnerable)</button>
+  </form>
+
+  <pre id="output"></pre>
+
+  <script>
+    async function post(path, data) {
+      const res = await fetch(path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return res.json().catch(() => ({ status: res.status }));
+    }
+
+    document.getElementById('readForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const filename = document.getElementById('filename').value;
+      // client-side regex double-check (already enforced by pattern)
+      const re = /^[a-zA-Z0-9_\-./]+$/;
+      if (!re.test(filename)) {
+        alert('Invalid filename format (client-side)');
+        return;
+      }
+      const r = await post('/read', { filename });
+      document.getElementById('output').textContent = JSON.stringify(r, null, 2);
+    });
+
+    document.getElementById('readVulnForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const filename = document.getElementById('filenameV').value;
+      const r = await post('/read-no-validate', { filename });
+      document.getElementById('output').textContent = JSON.stringify(r, null, 2);
+    });
+
+    // Setup sample files on load
+    window.addEventListener('load', async () => {
+      await post('/setup-sample', {});
+    });
+  </script>
+</body>
+</html>
