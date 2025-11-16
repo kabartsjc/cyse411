@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FastBank Home</title>
+</head>
+<body>
+  <h1>Welcome to FastBank</h1>
+  <p id="status">Checking session…</p>
+  <button id="logout-btn">Logout</button>
+
+  <script>
+    async function checkSession() {
+      const res = await fetch("/api/me");
+      if (!res.ok) {
+        document.getElementById("status").textContent =
+          "Not authenticated. Go back to login.";
+        return;
+      }
+      const data = await res.json();
+      if (data.authenticated) {
+        document.getElementById("status").textContent =
+          "Authenticated as: " + data.username;
+      } else {
+        document.getElementById("status").textContent =
+          "Not authenticated. Go back to login.";
+      }
+    }
+
+    document
+      .getElementById("logout-btn")
+      .addEventListener("click", async () => {
+        await fetch("/api/logout", { method: "POST" });
+        window.location.href = "/login.html";
+      });
+
+    checkSession();
+  </script>
+</body>
+</html>

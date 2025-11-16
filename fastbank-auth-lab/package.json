@@ -1,0 +1,17 @@
+{
+  "name": "fastbank-auth-lab",
+  "version": "1.0.0",
+  "description": "Lab: Secure Authentication & Session Management (FastBank demo)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "grade": "node grader/run-grader.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.21.2",
+    "bcrypt": "^5.1.1"
+  },
+  "devDependencies": {}
+}
