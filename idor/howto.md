@@ -7,3 +7,6 @@ node server.js
 
 # test as user 1
 Invoke-WebRequest -Headers @{"X-User-Id" = "1"} -Uri "http://localhost:3000/orders/1"
+
+# Now manipulate the ID:
+Invoke-WebRequest -Headers @{"X-User-Id" = "1"} -Uri "http://localhost:3000/orders/3"
