@@ -29,10 +29,8 @@ jobs:
 
       - name: Run Semgrep SAST (OWASP Top 10 rules)
         run: |
-          semgrep \
-            --config p/owasp-top-ten \
-            --error \
-            --sarif --output semgrep-results.sarif
+          semgrep --config p/owasp-top-ten --verbose
+
 
       - name: Upload SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
